@@ -32,6 +32,7 @@ namespace DevChat
             var bot = new DiscordBot(args[0]);
 
             bot.RegisterCommand<BasicCommand>();
+            bot.RegisterCommand<DevCommand>();
 
             bot.Start();
         }
