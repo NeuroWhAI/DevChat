@@ -97,7 +97,6 @@ namespace DevChat
         {
             Console.WriteLine("{0}: {1}", e.Context.User.Username, e.Context.Message.Content);
             await Task.CompletedTask;
-
         }
 
         private DiscordClient m_discord = null;
