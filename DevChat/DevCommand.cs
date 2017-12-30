@@ -21,11 +21,18 @@ namespace DevChat
             await ctx.Client.UpdateStatusAsync(game: new DiscordGame(job));
         }
 
+        private async Task NotifyFinish(CommandContext ctx)
+        {
+            await ctx.Client.UpdateStatusAsync();
+        }
+
         [Command("create"), RequireOwner]
         [Description("create {Name}\nCreate a project.")]
         public async Task Create(CommandContext ctx, string name)
         {
             await NotifyWorking(ctx, "Create " + name);
+
+            await NotifyFinish();
         }
 
         [Command("remove"), RequireOwner]
@@ -33,20 +40,26 @@ namespace DevChat
         public async Task Remove(CommandContext ctx, string name)
         {
             await NotifyWorking(ctx, "Remove " + name);
+
+            await NotifyFinish();
         }
 
         [Command("build"), RequireOwner]
         [Description("build {Name} {Script}\nBuild {Name} with script file at {Script}.")]
-        public async Task Build(CommandContext ctx, string name, string scriptPath)
+        public async Task Build(CommandContext ctx, string name, string scriptPath = "")
         {
             await NotifyWorking(ctx, "Build " + name);
+
+            await NotifyFinish();
         }
 
         [Command("run"), RequireOwner]
         [Description("run {Name} {File}\nExecute {Name}\'s file at {Script}.")]
-        public async Task Run(CommandContext ctx, string name, string filePath)
+        public async Task Run(CommandContext ctx, string name, string filePath = "")
         {
             await NotifyWorking(ctx, "Run " + name);
+
+            await NotifyFinish();
         }
     }
 }
