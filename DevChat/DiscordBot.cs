@@ -69,7 +69,12 @@ namespace DevChat
             m_commands.CommandErrored += Commands_CommandErrored;
 
 
-            m_interactivity = m_discord.UseInteractivity(new InteractivityConfiguration());
+            m_interactivity = m_discord.UseInteractivity(new InteractivityConfiguration()
+            {
+                PaginationBehaviour = TimeoutBehaviour.Ignore,
+                Timeout = TimeSpan.FromHours(2.0),
+                PaginationTimeout = TimeSpan.FromHours(2.0),
+            });
         }
 
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)
