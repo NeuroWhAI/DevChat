@@ -18,7 +18,7 @@ namespace DevChat
         private async Task NotifyWorking(CommandContext ctx, string job)
         {
             await ctx.TriggerTypingAsync();
-            await ctx.Client.UpdateStatusAsync(game: new Game(job));
+            await ctx.Client.UpdateStatusAsync(game: new DiscordGame(job));
         }
 
         [Command("create"), RequireOwner]
