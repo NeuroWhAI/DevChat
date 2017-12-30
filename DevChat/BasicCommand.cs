@@ -16,7 +16,7 @@ namespace DevChat
     public class BasicCommand
     {
         [Command("ping")]
-        [Description(">ping\nTest bot.")]
+        [Description("ping\nTest bot.")]
         public async Task Ping(CommandContext ctx)
         {
             await ctx.RespondAsync("pong!");
