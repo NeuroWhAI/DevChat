@@ -32,7 +32,7 @@ namespace DevChat
         {
             await NotifyWorking(ctx, "Create " + name);
 
-            await NotifyFinish();
+            await NotifyFinish(ctx);
         }
 
         [Command("remove"), RequireOwner]
@@ -41,7 +41,7 @@ namespace DevChat
         {
             await NotifyWorking(ctx, "Remove " + name);
 
-            await NotifyFinish();
+            await NotifyFinish(ctx);
         }
 
         [Command("build"), RequireOwner]
@@ -50,7 +50,7 @@ namespace DevChat
         {
             await NotifyWorking(ctx, "Build " + name);
 
-            await NotifyFinish();
+            await NotifyFinish(ctx);
         }
 
         [Command("run"), RequireOwner]
@@ -59,7 +59,7 @@ namespace DevChat
         {
             await NotifyWorking(ctx, "Run " + name);
 
-            await NotifyFinish();
+            await NotifyFinish(ctx);
         }
     }
 }
