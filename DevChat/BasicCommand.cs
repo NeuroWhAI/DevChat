@@ -21,13 +21,5 @@ namespace DevChat
         {
             await ctx.RespondAsync("pong!");
         }
-
-        [Command("botlink")]
-        [Description(">botlink\n봇 초대 링크를 얻습니다.")]
-        public async Task BotLink(CommandContext ctx)
-        {
-            var clientId = ctx.Client.Me.Id;
-            await ctx.RespondAsync($"https://discordapp.com/oauth2/authorize?client_id={clientId}}&scope=bot");
-        }
     }
 }
