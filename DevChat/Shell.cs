@@ -16,7 +16,7 @@ namespace DevChat
         {
             var info = new ProcessStartInfo(file)
             {
-                WorkingDirectory = this.WorkingDirectory,
+                WorkingDirectory = WorkingDirectory,
                 Arguments = argument,
                 UseShellExecute = false,
                 RedirectStandardInput = true,
