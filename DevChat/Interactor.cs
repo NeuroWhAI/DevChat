@@ -14,7 +14,7 @@ using DSharpPlus.Entities;
 
 namespace DevChat
 {
-    public class Interactor
+    public class Interactor : IPushMessage
     {
         public Interactor(CommandContext ctx)
         {
