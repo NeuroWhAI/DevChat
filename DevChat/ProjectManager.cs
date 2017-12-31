@@ -44,12 +44,12 @@ namespace DevChat
 
         public string GetConfigPath(string name)
         {
-            return Path.Combine(ConfigDir, name);
+            return Path.Combine(ConfigDir, name + ".json");
         }
 
         public bool Exists(string name)
         {
-            return Directory.Exists(GetConfigPath(name));
+            return File.Exists(GetConfigPath(name));
         }
 
         public void CreateProject(string name, string gitUrl, IPushMessage output)
@@ -65,8 +65,11 @@ namespace DevChat
             string configPath = GetConfigPath(name);
             string projPath = GetProjectPath(name);
 
-            Directory.CreateDirectory(configPath);
+            File.Create(configPath);
             Directory.CreateDirectory(projPath);
+
+
+            output.PushMessage("Complete!");
         }
 
         public void DeleteProject(string name, IPushMessage output)
@@ -77,7 +80,10 @@ namespace DevChat
                 string configPath = GetConfigPath(name);
 
                 Directory.Delete(projPath, true);
-                Directory.Delete(configPath, true);
+                File.Delete(configPath);
+
+
+                output.PushMessage("Complete!");
             }
             else
             {
