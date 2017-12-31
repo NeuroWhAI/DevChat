@@ -157,14 +157,18 @@ namespace DevChat
 
                     if (msg != null)
                     {
-                        if (msg.Message.Content == this.ExitKeyword)
+                        string content = msg.Message.Content;
+
+                        if (content == this.ExitKeyword)
                         {
                             break;
                         }
 
                         try
                         {
-                            this.InputStream.WriteLine(msg.Message.Content);
+                            PushMessage(content);
+
+                            this.InputStream.WriteLine(content);
                         }
                         catch (Exception e)
                         {
