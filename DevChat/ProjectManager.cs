@@ -91,7 +91,7 @@ namespace DevChat
             }
         }
 
-        private void NoException(Action action, string log = false)
+        private void NoException(Action action, bool log = false)
         {
             try
             {
