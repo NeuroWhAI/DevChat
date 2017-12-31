@@ -27,15 +27,22 @@ namespace DevChat
 
             var proc = new Process();
             proc.StartInfo = info;
-            proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+
+            var handler = new DataReceivedEventHandler((sender, e) =>
             {
-                if (!string.IsNullOrEmpty(e.Data))
+                if (e.Data == null)
+                {
+                    proc.Kill();
+                }
+                else
                 {
                     Console.WriteLine(e.Data);
 
                     outputHandler(e.Data);
                 }
             });
+            proc.OutputDataReceived += handler;
+            proc.ErrorDataReceived += handler;
 
             proc.Start();
 
@@ -48,12 +55,16 @@ namespace DevChat
         {
             var output = new StringBuilder();
 
-            var proc = Execute("cmd.exe", command, data =>
+            var proc = Execute("cmd.exe", "/C " + command, data =>
             {
                 output.AppendLine(data); 
             });
 
-            proc.WaitForExit();
+            while (proc.HasExited == false)
+            {
+                Task.Delay(10).Wait();
+            }
+
             proc.Close();
 
             return output.ToString();
