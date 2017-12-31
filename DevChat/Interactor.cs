@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -35,9 +36,9 @@ namespace DevChat
             while (true)
             {
                 var msg = interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
-                    this.TimeOut).ConfigureAwait(false).Result;
+                    this.TimeOut).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                if (msg == null || msg == this.ExitKeyword)
+                if (msg == null || msg.Message.Content == this.ExitKeyword)
                 {
                     break;
                 }
@@ -53,7 +54,7 @@ namespace DevChat
         {
             var buffer = new StringBuilder();
 
-            while (m_sendBuffer.isEmpty == false)
+            while (m_sendBuffer.IsEmpty == false)
             {
                 string msg;
                 while (!m_sendBuffer.TryDequeue(out msg))
@@ -70,7 +71,7 @@ namespace DevChat
             }
 
             m_ctx.RespondAsync("```\n" + buffer.ToString() + "\n```")
-                .ConfigureAwait(false).Wait();
+                .ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public void PushMessage(string message)
