@@ -61,5 +61,7 @@ namespace DevChat
         {
             await ctx.Client.UpdateStatusAsync();
         }
+
+        private ProjectManager ProjectMgr { get; set; } = new ProjectManager();
     }
 }
