@@ -87,6 +87,13 @@ namespace DevChat
         {
             await NotifyWorking(ctx, "Config " + name);
 
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.ConfigProject(name, prop, data, interactor);
+
+            interactor.StopAndWait();
+
             await NotifyFinish(ctx);
         }
 
