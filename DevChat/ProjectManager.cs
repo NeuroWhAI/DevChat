@@ -79,8 +79,8 @@ namespace DevChat
                 string projPath = GetProjectPath(name);
                 string configPath = GetConfigPath(name);
 
-                Directory.Delete(projPath, true);
-                File.Delete(configPath);
+                NoException(() => Directory.Delete(projPath, true));
+                NoException(() => File.Delete(configPath));
 
 
                 output.PushMessage("Complete!");
@@ -88,6 +88,22 @@ namespace DevChat
             else
             {
                 output.PushMessage($"Project {name} does not exists.");
+            }
+        }
+
+        private void NoException(Action action, string log = false)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                if (log)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                }
             }
         }
     }
