@@ -57,6 +57,7 @@
     <Compile Include="BasicCommand.cs" />
     <Compile Include="DevCommand.cs" />
     <Compile Include="DiscordBot.cs" />
+    <Compile Include="Interactor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
