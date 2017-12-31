@@ -65,7 +65,16 @@ namespace DevChat
             string configPath = GetConfigPath(name);
             string projPath = GetProjectPath(name);
 
-            File.Create(configPath).Close();
+            using (var sw = new StreamWriter(configPath, FileMode.Write))
+            {
+                var proj = new Project()
+                {
+                    GitUrl = gitUrl,
+                };
+
+                sw.WriteLine(proj.ToJson());
+            }
+
             Directory.CreateDirectory(projPath);
 
 
@@ -91,6 +100,22 @@ namespace DevChat
 
 
                 output.PushMessage("Complete!");
+            }
+            else
+            {
+                output.PushMessage($"Project {name} does not exists.");
+            }
+        }
+
+        public void InfoProject(string name, IPushMessage output)
+        {
+            if (Exists(name))
+            {
+                using (var sr = new StreamReader(GetConfigPath(name)))
+                {
+                    var text = sr.ReadToEnd();
+                    output.PushMessage(text);
+                }
             }
             else
             {

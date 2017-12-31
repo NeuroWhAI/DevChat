@@ -29,7 +29,7 @@ namespace DevChat
             this.RunScript = (string)json["run"];
         }
 
-        public string ToJsonText()
+        public string ToJson()
         {
             return JObject.FromObject(new
             {
