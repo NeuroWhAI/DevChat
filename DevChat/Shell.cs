@@ -51,6 +51,7 @@ namespace DevChat
             proc.Start();
 
             proc.BeginOutputReadLine();
+            proc.BeginErrorReadLine();
 
             return proc;
         }
