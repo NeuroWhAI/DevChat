@@ -65,15 +65,11 @@ namespace DevChat
             string configPath = GetConfigPath(name);
             string projPath = GetProjectPath(name);
 
-            using (var sw = new StreamWriter(configPath))
+            var proj = new Project()
             {
-                var proj = new Project()
-                {
-                    GitUrl = gitUrl,
-                };
-
-                sw.WriteLine(proj.ToJson());
-            }
+                GitUrl = gitUrl,
+            };
+            SaveProject(name, proj);
 
             Directory.CreateDirectory(projPath);
 
@@ -111,11 +107,9 @@ namespace DevChat
         {
             if (Exists(name))
             {
-                using (var sr = new StreamReader(GetConfigPath(name)))
-                {
-                    var text = sr.ReadToEnd();
-                    output.PushMessage(text);
-                }
+                var proj = LoadProject(name);
+                
+                output.PushMessage(proj.ToJson());
             }
             else
             {
@@ -127,22 +121,11 @@ namespace DevChat
         {
             if (Exists(name))
             {
-                string configPath = GetConfigPath(name);
-
-                var proj = new Project();
-
-                using (var sr = new StreamReader(configPath))
-                {
-                    var text = sr.ReadToEnd();
-                    proj.LoadFromJson(text);
-                }
+                var proj = LoadProject(name);
 
                 proj.SetProperty(prop, data);
 
-                using (var sw = new StreamWriter(configPath))
-                {
-                    sw.WriteLine(proj.ToJson());
-                }
+                SaveProject(name, proj);
 
 
                 output.PushMessage("Complete!");
@@ -186,6 +169,27 @@ namespace DevChat
             dirInfo.Attributes = FileAttributes.Normal;
 
             Directory.Delete(path);
+        }
+
+        private Project LoadProject(string name)
+        {
+            var proj = new Project();
+
+            using (var sr = new StreamReader(GetConfigPath(name)))
+            {
+                var text = sr.ReadToEnd();
+                proj.LoadFromJson(text);
+            }
+
+            return proj;
+        }
+
+        private void SaveProject(string name, Project proj)
+        {
+            using (var sw = new StreamWriter(GetConfigPath(name)))
+            {
+                sw.WriteLine(proj.ToJson());
+            }
         }
     }
 }
