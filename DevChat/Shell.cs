@@ -31,10 +31,12 @@ namespace DevChat
             {
                 if (!string.IsNullOrEmpty(e.Data))
                 {
+                    Console.WriteLine(e.Data);
+
                     outputHandler(e.Data);
                 }
             });
-            
+
             proc.Start();
 
             proc.BeginOutputReadLine();
@@ -48,7 +50,7 @@ namespace DevChat
 
             var proc = Execute("cmd.exe", command, data =>
             {
-                output.Append(data); 
+                output.AppendLine(data); 
             });
 
             proc.WaitForExit();
