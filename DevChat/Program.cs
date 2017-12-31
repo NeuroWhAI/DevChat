@@ -11,6 +11,9 @@ namespace DevChat
     {
         static void Main(string[] args)
         {
+            Shell.WorkingDirectory = Directory.GetCurrentDirectory();
+
+
 #if DEBUG
             using (var sr = new StreamReader("data.txt"))
             {
