@@ -162,6 +162,9 @@ namespace DevChat
                     Task.Delay(200).Wait();
                 }
             }
+
+
+            this.Online = false;
         }
 
         private CommandContext m_ctx = null;
