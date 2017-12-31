@@ -13,21 +13,6 @@ namespace DevChat
     {
         public static string WorkingDirectory { get; set; }
 
-        public static void WaitForExit(Process proc)
-        {
-            var outputEvent = OutputEventMap[proc];
-            var errorEvent = ErrorEventMap[proc];
-
-            outputEvent.WaitOne();
-            errorEvent.WaitOne();
-
-            outputEvent.Dispose();
-            OutputEventMap.Remove(proc);
-
-            errorEvent.Dispose();
-            ErrorEventMap.Remove(proc);
-        }
-
         public static Process Execute(string file, string argument, Action<string> outputHandler)
         {
             var info = new ProcessStartInfo(file)
@@ -44,16 +29,9 @@ namespace DevChat
             var proc = new Process();
             proc.StartInfo = info;
 
-            OutputEventMap.Add(proc, new AutoResetEvent(false));
-            ErrorEventMap.Add(proc, new AutoResetEvent(false));
-
             proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
-                if (e.Data == null)
-                {
-                    OutputEventMap[proc].Set();
-                }
-                else
+                if (e.Data != null)
                 {
                     Console.WriteLine(e.Data);
 
@@ -62,11 +40,7 @@ namespace DevChat
             });
             proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
-                if (e.Data == null)
-                {
-                    ErrorEventMap[proc].Set();
-                }
-                else
+                if (e.Data != null)
                 {
                     Console.WriteLine(e.Data);
 
@@ -81,24 +55,29 @@ namespace DevChat
             return proc;
         }
 
-        public static string Execute(string command)
+        public static string Execute(string file, string argument)
         {
-            var output = new StringBuilder();
-
-            var proc = Execute("cmd.exe", "/C " + command, data =>
+            var info = new ProcessStartInfo(file)
             {
-                output.AppendLine(data); 
-            });
+                WorkingDirectory = WorkingDirectory,
+                Arguments = argument,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+            };
 
-            WaitForExit(proc);
-            proc.Close();
+            var proc = new Process();
+            proc.StartInfo = info;
 
-            return output.ToString();
+            proc.Start();
+
+            string output = proc.StandardOutput.ReadToEnd() + "\n"
+                + proc.StandardError.ReadToEnd();
+
+            proc.WaitForExit();
+
+            return output;
         }
-
-        private static Dictionary<Process, AutoResetEvent> OutputEventMap
-        { get; set; } = new Dictionary<Process, AutoResetEvent>();
-        private static Dictionary<Process, AutoResetEvent> ErrorEventMap
-        { get; set; } = new Dictionary<Process, AutoResetEvent>();
     }
 }

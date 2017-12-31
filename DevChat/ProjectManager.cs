@@ -71,7 +71,7 @@ namespace DevChat
 
             // Clone git repo
             Shell.WorkingDirectory = projPath;
-            string cloneResult = Shell.Execute($"git clone \"{gitUrl}\" .");
+            string cloneResult = Shell.Execute("git", $"clone \"{gitUrl}\" .");
 
             output.PushMessage(cloneResult);
 
