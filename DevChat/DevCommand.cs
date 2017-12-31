@@ -15,17 +15,6 @@ namespace DevChat
 {
     public class DevCommand
     {
-        private async Task NotifyWorking(CommandContext ctx, string job)
-        {
-            await ctx.TriggerTypingAsync();
-            await ctx.Client.UpdateStatusAsync(game: new DiscordGame(job));
-        }
-
-        private async Task NotifyFinish(CommandContext ctx)
-        {
-            await ctx.Client.UpdateStatusAsync();
-        }
-
         [Command("create"), RequireOwner]
         [Description("create {Name}\nCreate a project.")]
         public async Task Create(CommandContext ctx, string name)
@@ -60,6 +49,17 @@ namespace DevChat
             await NotifyWorking(ctx, "Run " + name);
 
             await NotifyFinish(ctx);
+        }
+
+        private async Task NotifyWorking(CommandContext ctx, string job)
+        {
+            await ctx.TriggerTypingAsync();
+            await ctx.Client.UpdateStatusAsync(game: new DiscordGame(job));
+        }
+
+        private async Task NotifyFinish(CommandContext ctx)
+        {
+            await ctx.Client.UpdateStatusAsync();
         }
     }
 }
