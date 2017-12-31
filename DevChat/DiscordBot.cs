@@ -8,6 +8,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 
 namespace DevChat
 {
@@ -79,10 +80,9 @@ namespace DevChat
             });
         }
 
-        private static async Task Discord_MessageCreated(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        private static async Task Discord_MessageCreated(MessageCreateEventArgs e)
         {
-            Console.WriteLine("({0}): [{1}] - {2}#{3}", DateTime.UtcNow.ToShortTimeString(),
-                e.Channel.Name, e.Author.Username, e.Author.Id);
+            MessageManager.PushMessage(e);
 
             await Task.CompletedTask;
         }

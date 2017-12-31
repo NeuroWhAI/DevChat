@@ -142,38 +142,42 @@ namespace DevChat
 
         private void ReceiveJob()
         {
-            var interactivity = m_ctx.Client.GetInteractivityModule();
+            MessageManager.Clear();
 
+            
             while (this.Online)
             {
                 if (this.InputStream != null)
                 {
-                    var msg = interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
-                        this.TimeOut)
-                        .ConfigureAwait(false).GetAwaiter().GetResult();
-
-                    if (msg == null || msg.Message.Content == this.ExitKeyword)
+                    var msg = MessageManager.GetMessageMatch(arg =>
                     {
-                        break;
-                    }
+                        return (arg.Channel.Id == m_ctx.Channel.Id
+                            && arg.User.Id == m_ctx.User.Id);
+                    });
 
-                    try
+                    if (msg != null)
                     {
-                        this.InputStream.WriteLine(msg.Message.Content);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine(e.StackTrace);
+                        if (msg.Message.Content == this.ExitKeyword)
+                        {
+                            break;
+                        }
 
-                        this.InputStream = null;
-                        break;
+                        try
+                        {
+                            this.InputStream.WriteLine(msg.Message.Content);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine(e.StackTrace);
+
+                            this.InputStream = null;
+                            break;
+                        }
                     }
                 }
-                else
-                {
-                    Task.Delay(200).Wait();
-                }
+
+                Task.Delay(50).Wait();
             }
 
 
