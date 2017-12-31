@@ -123,6 +123,36 @@ namespace DevChat
             }
         }
 
+        public void ConfigProject(string name, string prop, string data, IPushMessage output)
+        {
+            if (Exists(name))
+            {
+                string configPath = GetConfigPath(name);
+
+                var proj = new Project();
+
+                using (var sr = new StreamReader(configPath))
+                {
+                    var text = sr.ReadToEnd();
+                    proj.LoadFromJson(text);
+                }
+
+                proj.SetProperty(prop, data);
+
+                using (var sw = new StreamWriter(configPath))
+                {
+                    sw.WriteLine(proj.ToJson());
+                }
+
+
+                output.PushMessage("Complete!");
+            }
+            else
+            {
+                output.PushMessage($"Project {name} does not exists.");
+            }
+        }
+
         private void NoException(Action action, bool log = false)
         {
             try
