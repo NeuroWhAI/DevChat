@@ -15,19 +15,17 @@ namespace DevChat
 
         public static void WaitForExit(Process proc)
         {
-            if (ResetEventMap.Contains(proc))
-            {
-                var resetEvent = ResetEventMap[proc];
+            var outputEvent = OutputEventMap[proc];
+            var errorEvent = ErrorEventMap[proc];
 
-                resetEvent.WaitOne();
+            outputEvent.WaitOne();
+            errorEvent.WaitOne();
 
-                resetEvent.Dispose();
-                ResetEventMap.Remove(proc);
-            }
-            else
-            {
-                proc.WaitForExit();
-            }
+            outputEvent.Dispose();
+            OutputEventMap.Remove(proc);
+
+            errorEvent.Dispose();
+            ErrorEventMap.Remove(proc);
         }
 
         public static Process Execute(string file, string argument, Action<string> outputHandler)
@@ -46,13 +44,14 @@ namespace DevChat
             var proc = new Process();
             proc.StartInfo = info;
 
-            ResetEventMap.Add(proc, new AutoResetEvent(false));
+            OutputEventMap.Add(proc, new AutoResetEvent(false));
+            ErrorEventMap.Add(proc, new AutoResetEvent(false));
 
-            var handler = new DataReceivedEventHandler((sender, e) =>
+            proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
                 if (e.Data == null)
                 {
-                    ResetEventMap[proc].Set();
+                    OutputEventMap[proc].Set();
                 }
                 else
                 {
@@ -61,9 +60,19 @@ namespace DevChat
                     outputHandler(e.Data);
                 }
             });
+            proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+            {
+                if (e.Data == null)
+                {
+                    ErrorEventMap[proc].Set();
+                }
+                else
+                {
+                    Console.WriteLine(e.Data);
 
-            proc.OutputDataReceived += handler;
-            proc.ErrorDataReceived += handler;
+                    outputHandler(e.Data);
+                }
+            });
 
             proc.Start();
 
@@ -87,7 +96,9 @@ namespace DevChat
             return output.ToString();
         }
 
-        private static Dictionary<Process, AutoResetEvent> ResetEventMap
+        private static Dictionary<Process, AutoResetEvent> OutputEventMap
+        { get; set; } = new Dictionary<Process, AutoResetEvent>();
+        private static Dictionary<Process, AutoResetEvent> ErrorEventMap
         { get; set; } = new Dictionary<Process, AutoResetEvent>();
     }
 }
