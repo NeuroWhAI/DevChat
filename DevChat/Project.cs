@@ -24,19 +24,40 @@ namespace DevChat
         public void LoadFromJson(string jsonText)
         {
             var json = JObject.Parse(jsonText);
+            LoadFromJObject(json);
+        }
+
+        public string ToJson()
+        {
+            return ConvertToJson().ToString();
+        }
+
+        public void SetProperty(string key, string val)
+        {
+            var json = ConvertToJson();
+            if (json[key] != null)
+            {
+                json[key] = val;
+            }
+
+            LoadFromJObject(json);
+        }
+
+        private void LoadFromJObject(JObject json)
+        {
             this.GitUrl = (string)json["git"];
             this.BuildScript = (string)json["build"];
             this.RunScript = (string)json["run"];
         }
 
-        public string ToJson()
+        private JObject ConvertToJson()
         {
             return JObject.FromObject(new
             {
                 git = this.GitUrl,
                 build = this.BuildScript,
                 run = this.RunScript
-            }).ToString();
+            });
         }
     }
 }
