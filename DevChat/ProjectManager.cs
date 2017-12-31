@@ -114,7 +114,7 @@ namespace DevChat
             }
         }
 
-        private void DeleteDirectory(path)
+        private void DeleteDirectory(string path)
         {
             foreach (string file in Directory.GetFiles(path))
             {
