@@ -65,7 +65,7 @@ namespace DevChat
             string configPath = GetConfigPath(name);
             string projPath = GetProjectPath(name);
 
-            File.Create(configPath);
+            File.Create(configPath).Close();
             Directory.CreateDirectory(projPath);
 
 
