@@ -152,7 +152,7 @@ namespace DevChat
                     var msg = MessageManager.GetMessageMatch(arg =>
                     {
                         return (arg.Channel.Id == m_ctx.Channel.Id
-                            && arg.User.Id == m_ctx.User.Id);
+                            && arg.Author.Id == m_ctx.User.Id);
                     });
 
                     if (msg != null)

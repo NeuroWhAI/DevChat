@@ -64,6 +64,6 @@ namespace DevChat
         }
 
         private static List<MessageInfo> s_msgList = new List<MessageInfo>();
-        private static readonly s_lockList = new object();
+        private static readonly object s_lockList = new object();
     }
 }
