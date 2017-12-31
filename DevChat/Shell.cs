@@ -58,23 +58,12 @@ namespace DevChat
 
         public static string Execute(string file, string argument)
         {
-            var info = new ProcessStartInfo(file)
+            var output = new StringBuilder();
+
+            var proc = Execute(file, argument, data =>
             {
-                WorkingDirectory = WorkingDirectory,
-                Arguments = argument,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true,
-            };
-
-            var proc = new Process();
-            proc.StartInfo = info;
-
-            proc.Start();
-
-            string output = proc.StandardOutput.ReadToEnd() + "\n"
-                + proc.StandardError.ReadToEnd();
+                output.AppendLine(output);
+            });
 
             proc.WaitForExit();
             proc.Close();
