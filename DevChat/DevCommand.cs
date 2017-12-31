@@ -64,17 +64,24 @@ namespace DevChat
         }
 
         [Command("build"), RequireOwner]
-        [Description("build {Name} [{Script}]\nBuild {Name} with script file at {Script}.")]
-        public async Task Build(CommandContext ctx, string name, string scriptPath = "")
+        [Description("build {Name}\nBuild {Name}.")]
+        public async Task Build(CommandContext ctx, string name)
         {
             await NotifyWorking(ctx, "Build " + name);
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.BuildProject(name, interactor);
+
+            interactor.StopAndWait();
 
             await NotifyFinish(ctx);
         }
 
         [Command("run"), RequireOwner]
-        [Description("run {Name} [{File}]\nExecute {Name}\'s file at {Script}.")]
-        public async Task Run(CommandContext ctx, string name, string filePath = "")
+        [Description("run {Name}\nExecute {Name}.")]
+        public async Task Run(CommandContext ctx, string name)
         {
             await NotifyWorking(ctx, "Run " + name);
 

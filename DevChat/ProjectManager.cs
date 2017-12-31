@@ -136,6 +136,39 @@ namespace DevChat
             }
         }
 
+        public void BuildProject(string name, IPushMessage output)
+        {
+            if (Exists(name))
+            {
+                var proj = LoadProject(name);
+
+
+                // Sync repo
+                Shell.WorkingDirectory = GetProjectPath(name);
+                string pullResult = Shell.Execute("git", "pull");
+
+                output.PushMessage(pullResult);
+
+
+                // Run build script
+                if (string.IsNullOrWhiteSpace(proj.BuildScript) == false)
+                {
+                    var process = Shell.Execute("cmd", "/C " + proj.BuildScript,
+                        output.PushMessage);
+
+                    process.WaitForExit();
+                    process.Close();
+                }
+
+
+                output.PushMessage("Complete!");
+            }
+            else
+            {
+                output.PushMessage($"Project {name} does not exists.");
+            }
+        }
+
         private void NoException(Action action, bool log = false)
         {
             try
