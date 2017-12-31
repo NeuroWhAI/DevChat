@@ -130,6 +130,8 @@ namespace DevChat
                     {
                         Console.WriteLine(e.Message);
                         Console.WriteLine(e.StackTrace);
+
+                        Task.Delay(1000).Wait();
                     }
                 }
 
