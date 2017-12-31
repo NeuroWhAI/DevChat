@@ -24,11 +24,11 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
-        [Command("remove"), Aliases("del"), RequireOwner]
-        [Description("remove {Name}\nRemove a project.")]
-        public async Task Remove(CommandContext ctx, string name)
+        [Command("delete"), Aliases("del"), RequireOwner]
+        [Description("delete {Name}\nDelete a project.")]
+        public async Task Delete(CommandContext ctx, string name)
         {
-            await NotifyWorking(ctx, "Remove " + name);
+            await NotifyWorking(ctx, "Delete " + name);
 
             await NotifyFinish(ctx);
         }
