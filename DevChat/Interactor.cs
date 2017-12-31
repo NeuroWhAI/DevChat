@@ -27,86 +27,37 @@ namespace DevChat
         public string ExitKeyword { get; set; } = "!q";
         public bool Online { get; set; } = false;
 
-        public async Task Start()
+        public void Start()
         {
             this.Online = true;
 
+            m_sendTask = new Task(this.SendJob);
+            m_sendTask.Start();
 
-            var interactivity = m_ctx.Client.GetInteractivityModule();
-
-
-            // Send task
-            var sendTask = new Task(() =>
-            {
-                while (this.Online)
-                {
-                    var output = DequeueSendBuffer(2048);
-
-                    while (this.Online && output.Length > 0)
-                    {
-                        try
-                        {
-                            m_ctx.RespondAsync($"```\n{output}\n```")
-                                .ConfigureAwait(false).GetAwaiter().GetResult();
-
-                            break;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.Message);
-                            Console.WriteLine(e.StackTrace);
-                        }
-                    }
-
-
-                    Task.Delay(this.SendPeriod).Wait();
-                }
-            });
-            sendTask.Start();
-
-
-            // Receive task
-            while (this.Online)
-            {
-                var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
-                    this.TimeOut);
-
-                if (msg == null || msg.Message.Content == this.ExitKeyword)
-                {
-                    break;
-                }
-
-                if (this.InputStream != null)
-                {
-                    try
-                    {
-                        this.InputStream.WriteLine(msg.Message.Content);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine(e.StackTrace);
-
-                        this.InputStream = null;
-                        break;
-                    }
-                }
-            }
-
-
-            this.Online = false;
-
-
-            sendTask.Wait();
+            m_recvTask = new Task(this.ReceiveJob);
+            m_recvTask.Start();
         }
 
-        public async Task Finish()
+        public void Stop()
         {
+            this.Online = false;
+        }
+
+        public void Wait()
+        {
+            m_sendTask.Wait();
+            m_recvTask.Wait();
+
+            m_sendTask = null;
+            m_recvTask = null;
+
+
             var output = DequeueSendBuffer(2048);
 
             if (output.Length > 0)
             {
-                await m_ctx.RespondAsync($"```\n{output}\n```");
+                m_ctx.RespondAsync($"```\n{output}\n```")
+                    .ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
 
@@ -115,7 +66,10 @@ namespace DevChat
 
         public void PushMessage(string message)
         {
-            m_sendBuffer.Enqueue(message);
+            if (this.Online)
+            {
+                m_sendBuffer.Enqueue(message);
+            }
         }
 
         private string DequeueSendBuffer(int maxLength)
@@ -146,7 +100,73 @@ namespace DevChat
             return buffer.ToString();
         }
 
+        private void SendJob()
+        {
+            while (this.Online)
+            {
+                var output = DequeueSendBuffer(2048);
+
+                while (this.Online && output.Length > 0)
+                {
+                    try
+                    {
+                        m_ctx.RespondAsync($"```\n{output}\n```")
+                            .ConfigureAwait(false).GetAwaiter().GetResult();
+
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e.StackTrace);
+                    }
+                }
+
+
+                Task.Delay(this.SendPeriod).Wait();
+            }
+        }
+
+        private void ReceiveJob()
+        {
+            var interactivity = m_ctx.Client.GetInteractivityModule();
+
+            while (this.Online)
+            {
+                if (this.InputStream != null)
+                {
+                    var msg = interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
+                        this.TimeOut)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+
+                    if (msg == null || msg.Message.Content == this.ExitKeyword)
+                    {
+                        break;
+                    }
+
+                    try
+                    {
+                        this.InputStream.WriteLine(msg.Message.Content);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e.StackTrace);
+
+                        this.InputStream = null;
+                        break;
+                    }
+                }
+                else
+                {
+                    Task.Delay(200).Wait();
+                }
+            }
+        }
+
         private CommandContext m_ctx = null;
         private ConcurrentQueue<string> m_sendBuffer = new ConcurrentQueue<string>();
+        private Task m_sendTask = null;
+        private Task m_recvTask = null;
     }
 }
