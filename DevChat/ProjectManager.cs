@@ -86,7 +86,7 @@ namespace DevChat
                 string projPath = GetProjectPath(name);
                 string configPath = GetConfigPath(name);
 
-                NoException(() => Directory.Delete(projPath, true));
+                NoException(() => DeleteDirectory(projPath));
                 NoException(() => File.Delete(configPath));
 
 
@@ -112,6 +112,25 @@ namespace DevChat
                     Console.WriteLine(e.StackTrace);
                 }
             }
+        }
+
+        private void DeleteDirectory(path)
+        {
+            foreach (string file in Directory.GetFiles(path))
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(dir);
+            }
+
+            var dirInfo = new DirectoryInfo(path);
+            dirInfo.Attributes = FileAttributes.Normal;
+
+            Directory.Delete(path);
         }
     }
 }
