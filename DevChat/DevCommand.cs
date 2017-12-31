@@ -34,7 +34,7 @@ namespace DevChat
         }
 
         [Command("build"), RequireOwner]
-        [Description("build {Name} {Script}\nBuild {Name} with script file at {Script}.")]
+        [Description("build {Name} [{Script}]\nBuild {Name} with script file at {Script}.")]
         public async Task Build(CommandContext ctx, string name, string scriptPath = "")
         {
             await NotifyWorking(ctx, "Build " + name);
@@ -43,7 +43,7 @@ namespace DevChat
         }
 
         [Command("run"), RequireOwner]
-        [Description("run {Name} {File}\nExecute {Name}\'s file at {Script}.")]
+        [Description("run {Name} [{File}]\nExecute {Name}\'s file at {Script}.")]
         public async Task Run(CommandContext ctx, string name, string filePath = "")
         {
             await NotifyWorking(ctx, "Run " + name);
