@@ -58,6 +58,8 @@ namespace DevChat
                 await Task.CompletedTask;
             };
 
+            m_discord.MessageCreated += Discord_MessageCreated;
+
 
             m_commands = m_discord.UseCommandsNext(new CommandsNextConfiguration
             {
@@ -75,6 +77,14 @@ namespace DevChat
                 Timeout = TimeSpan.FromHours(2.0),
                 PaginationTimeout = TimeSpan.FromHours(2.0),
             });
+        }
+
+        private static async Task Discord_MessageCreated(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        {
+            Console.WriteLine("({0}): [{1}] - {2}#{3}", DateTime.UtcNow.ToShortTimeString(),
+                e.Channel.Name, e.Author.Username, e.Author.Id);
+
+            await Task.CompletedTask;
         }
 
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)
