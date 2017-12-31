@@ -51,5 +51,38 @@ namespace DevChat
         {
             return Directory.Exists(GetConfigPath(name));
         }
+
+        public void CreateProject(string name, string gitUrl, IPushMessage output)
+        {
+            if (Exists(name))
+            {
+                output.PushMessage($"Project {name} already exists.");
+
+                return;
+            }
+
+
+            string configPath = GetConfigPath(name);
+            string projPath = GetProjectPath(name);
+
+            Directory.CreateDirectory(configPath);
+            Directory.CreateDirectory(projPath);
+        }
+
+        public void DeleteProject(string name, IPushMessage output)
+        {
+            if (Exists(name))
+            {
+                string projPath = GetProjectPath(name);
+                string configPath = GetConfigPath(name);
+
+                Directory.Delete(projPath, true);
+                Directory.Delete(configPath, true);
+            }
+            else
+            {
+                output.PushMessage($"Project {name} does not exists.");
+            }
+        }
     }
 }
