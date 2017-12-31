@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Diagnostics;
 
@@ -11,6 +12,23 @@ namespace DevChat
     static class Shell
     {
         public static string WorkingDirectory { get; set; }
+
+        public static void WaitForExit(Process proc)
+        {
+            if (ResetEventMap.Contains(proc))
+            {
+                var resetEvent = ResetEventMap[proc];
+
+                resetEvent.WaitOne();
+
+                resetEvent.Dispose();
+                ResetEventMap.Remove(proc);
+            }
+            else
+            {
+                proc.WaitForExit();
+            }
+        }
 
         public static Process Execute(string file, string argument, Action<string> outputHandler)
         {
@@ -28,11 +46,13 @@ namespace DevChat
             var proc = new Process();
             proc.StartInfo = info;
 
+            ResetEventMap.Add(proc, new AutoResetEvent(false));
+
             var handler = new DataReceivedEventHandler((sender, e) =>
             {
                 if (e.Data == null)
                 {
-                    proc.Kill();
+                    ResetEventMap[proc].Set();
                 }
                 else
                 {
@@ -41,6 +61,7 @@ namespace DevChat
                     outputHandler(e.Data);
                 }
             });
+
             proc.OutputDataReceived += handler;
             proc.ErrorDataReceived += handler;
 
@@ -60,14 +81,13 @@ namespace DevChat
                 output.AppendLine(data); 
             });
 
-            while (proc.HasExited == false)
-            {
-                Task.Delay(10).Wait();
-            }
-
+            WaitForExit(proc);
             proc.Close();
 
             return output.ToString();
         }
+
+        private static Dictionary<Process, AutoResetEvent> ResetEventMap
+        { get; set; } = new Dictionary<Process, AutoResetEvent>();
     }
 }
