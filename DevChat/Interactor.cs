@@ -84,6 +84,9 @@ namespace DevChat
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e.StackTrace);
+
                         this.InputStream = null;
                         break;
                     }
@@ -115,7 +118,7 @@ namespace DevChat
             m_sendBuffer.Enqueue(message);
         }
 
-        private void DequeueSendBuffer(int maxLength)
+        private string DequeueSendBuffer(int maxLength)
         {
             var buffer = new StringBuilder();
 
@@ -131,8 +134,7 @@ namespace DevChat
                 {
                     break;
                 }
-
-                string msg;
+                
                 while (!m_sendBuffer.TryDequeue(out msg))
                 {
                     Task.Delay(10).Wait();
