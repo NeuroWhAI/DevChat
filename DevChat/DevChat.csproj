@@ -60,6 +60,7 @@
     <Compile Include="Interactor.cs" />
     <Compile Include="IPushMessage.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell.cs" />
