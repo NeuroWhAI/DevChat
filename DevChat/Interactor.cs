@@ -25,7 +25,7 @@ namespace DevChat
         public StreamWriter InputStream { get; set; } = null;
         public string ExitKeyword { get; set; } = "";
 
-        public void Start()
+        public async Task Start()
         {
             var interactivity = m_ctx.Client.GetInteractivityModule();
 
@@ -35,8 +35,8 @@ namespace DevChat
 
             while (true)
             {
-                var msg = interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
-                    this.TimeOut).ConfigureAwait(false).GetAwaiter().GetResult();
+                var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
+                    this.TimeOut);
 
                 if (msg == null || msg.Message.Content == this.ExitKeyword)
                 {
@@ -50,7 +50,7 @@ namespace DevChat
             }
         }
 
-        public void Finish()
+        public async Task Finish()
         {
             var buffer = new StringBuilder();
 
@@ -70,8 +70,7 @@ namespace DevChat
                 }
             }
 
-            m_ctx.RespondAsync("```\n" + buffer.ToString() + "\n```")
-                .ConfigureAwait(false).GetAwaiter().GetResult();
+            await m_ctx.RespondAsync("```\n" + buffer.ToString() + "\n```");
         }
 
         public void PushMessage(string message)
