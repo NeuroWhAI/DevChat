@@ -62,7 +62,7 @@ namespace DevChat
 
             var proc = Execute(file, argument, data =>
             {
-                output.AppendLine(output);
+                output.AppendLine(data);
             });
 
             proc.WaitForExit();
