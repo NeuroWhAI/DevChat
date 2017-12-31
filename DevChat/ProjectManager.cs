@@ -69,6 +69,13 @@ namespace DevChat
             Directory.CreateDirectory(projPath);
 
 
+            // Clone git repo
+            Shell.WorkingDirectory = projPath;
+            string cloneResult = Shell.Execute($"git clone \"{gitUrl}\" .");
+
+            output.PushMessage(cloneResult);
+
+
             output.PushMessage("Complete!");
         }
 

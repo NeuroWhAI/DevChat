@@ -47,7 +47,7 @@ namespace DevChat
 
             var proc = Execute("cmd.exe", command, data =>
             {
-               output.Append(data); 
+                output.Append(data); 
             });
 
             proc.WaitForExit();
