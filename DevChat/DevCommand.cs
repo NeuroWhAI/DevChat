@@ -26,8 +26,7 @@ namespace DevChat
 
             ProjectMgr.CreateProject(name, gitUrl, interactor);
 
-            interactor.Stop();
-            interactor.Wait();
+            interactor.StopAndWait();
 
             await NotifyFinish(ctx);
         }
@@ -43,8 +42,7 @@ namespace DevChat
 
             ProjectMgr.DeleteProject(name, interactor);
 
-            interactor.Stop();
-            interactor.Wait();
+            interactor.StopAndWait();
 
             await NotifyFinish(ctx);
         }

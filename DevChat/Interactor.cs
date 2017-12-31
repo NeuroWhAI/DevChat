@@ -64,6 +64,12 @@ namespace DevChat
             this.Online = false;
         }
 
+        public void StopAndWait()
+        {
+            Stop();
+            Wait();
+        }
+
         public void PushMessage(string message)
         {
             if (this.Online)
