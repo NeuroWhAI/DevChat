@@ -9,6 +9,12 @@ namespace DevChat
 {
     class ProjectManager
     {
+        public ProjectManager()
+        {
+            this.ProjectDir = "Projects";
+            this.ConfigDir = "Configs";
+        }
+
         private string m_projectDir = "";
         public string ProjectDir
         {
@@ -18,7 +24,7 @@ namespace DevChat
                 m_projectDir = value;
                 Directory.CreateDirectory(value);
             }
-        } = "Projects";
+        }
 
         private string m_configDir = "";
         public string ConfigDir
@@ -29,7 +35,7 @@ namespace DevChat
                 m_configDir = value;
                 Directory.CreateDirectory(value);
             }
-        } = "Configs";
+        }
 
         public string GetProjectPath(string name)
         {
