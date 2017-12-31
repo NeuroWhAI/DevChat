@@ -16,10 +16,18 @@ namespace DevChat
     public class DevCommand
     {
         [Command("create"), Aliases("new"), RequireOwner]
-        [Description("create {Name}\nCreate a project.")]
-        public async Task Create(CommandContext ctx, string name)
+        [Description("create {Name} {Git URL}\nCreate a project.")]
+        public async Task Create(CommandContext ctx, string name, string gitUrl)
         {
             await NotifyWorking(ctx, "Create " + name);
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.CreateProject(name, gitUrl, interactor);
+
+            interactor.Stop();
+            interactor.Wait();
 
             await NotifyFinish(ctx);
         }
@@ -29,6 +37,14 @@ namespace DevChat
         public async Task Delete(CommandContext ctx, string name)
         {
             await NotifyWorking(ctx, "Delete " + name);
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.DeleteProject(name, interactor);
+
+            interactor.Stop();
+            interactor.Wait();
 
             await NotifyFinish(ctx);
         }
