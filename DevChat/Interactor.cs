@@ -22,27 +22,51 @@ namespace DevChat
         }
 
         public TimeSpan TimeOut { get; set; } = TimeSpan.FromHours(2.0);
+        public TimeSpan SendPeriod { get; set; } = TimeSpan.FromSeconds(2.0);
         public StreamWriter InputStream { get; set; } = null;
-        public string ExitKeyword { get; set; } = "";
+        public string ExitKeyword { get; set; } = "!q";
+        public bool Online { get; set; } = false;
 
         public async Task Start()
         {
+            this.Online = true;
+
+
             var interactivity = m_ctx.Client.GetInteractivityModule();
 
 
             // Send task
             var sendTask = new Task(() =>
             {
-                while (interactivity != null)
+                while (this.Online)
                 {
-                    
+                    var output = DequeueSendBuffer(2048);
+
+                    while (this.Online && output.Length > 0)
+                    {
+                        try
+                        {
+                            m_ctx.RespondAsync($"```\n{output}\n```")
+                                .ConfigureAwait(false).GetAwaiter().GetResult();
+
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine(e.StackTrace);
+                        }
+                    }
+
+
+                    Task.Delay(this.SendPeriod).Wait();
                 }
             });
             sendTask.Start();
 
 
             // Receive task
-            while (interactivity != null)
+            while (this.Online)
             {
                 var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
                     this.TimeOut);
@@ -54,12 +78,20 @@ namespace DevChat
 
                 if (this.InputStream != null)
                 {
-                    this.InputStream.WriteLine(msg.Message.Content);
+                    try
+                    {
+                        this.InputStream.WriteLine(msg.Message.Content);
+                    }
+                    catch (Exception e)
+                    {
+                        this.InputStream = null;
+                        break;
+                    }
                 }
             }
 
 
-            interactivity = null;
+            this.Online = false;
 
 
             sendTask.Wait();
@@ -67,25 +99,15 @@ namespace DevChat
 
         public async Task Finish()
         {
-            var buffer = new StringBuilder();
+            var output = DequeueSendBuffer(2048);
 
-            while (m_sendBuffer.IsEmpty == false)
+            if (output.Length > 0)
             {
-                string msg;
-                while (!m_sendBuffer.TryDequeue(out msg))
-                {
-                    Task.Delay(10).Wait();
-                }
-
-                buffer.AppendLine(msg);
-
-                if (buffer.Length > 2048)
-                {
-                    break;
-                }
+                await m_ctx.RespondAsync($"```\n{output}\n```");
             }
 
-            await m_ctx.RespondAsync("```\n" + buffer.ToString() + "\n```");
+
+            this.Online = false;
         }
 
         public void PushMessage(string message)
@@ -93,8 +115,36 @@ namespace DevChat
             m_sendBuffer.Enqueue(message);
         }
 
+        private void DequeueSendBuffer(int maxLength)
+        {
+            var buffer = new StringBuilder();
+
+            while (m_sendBuffer.IsEmpty == false)
+            {
+                string msg;
+                while (!m_sendBuffer.TryPeek(out msg))
+                {
+                    Task.Delay(10).Wait();
+                }
+
+                if (buffer.Length + msg.Length > maxLength)
+                {
+                    break;
+                }
+
+                string msg;
+                while (!m_sendBuffer.TryDequeue(out msg))
+                {
+                    Task.Delay(10).Wait();
+                }
+
+                buffer.AppendLine(msg);
+            }
+
+            return buffer.ToString();
+        }
+
         private CommandContext m_ctx = null;
         private ConcurrentQueue<string> m_sendBuffer = new ConcurrentQueue<string>();
-        private DateTime m_latestSendTime = DateTime.MinValue;
     }
 }
