@@ -68,7 +68,7 @@ namespace DevChat
             proc.WaitForExit();
             proc.Close();
 
-            return output;
+            return output.ToString();
         }
     }
 }
