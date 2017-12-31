@@ -47,6 +47,22 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
+        [Command("info"), RequireOwner]
+        [Description("info {Name}\nShow properties of {Name}.")]
+        public async Task Info(CommandContext ctx, string name)
+        {
+            await NotifyWorking(ctx, "Info " + name);
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.InfoProject(name, interactor);
+
+            interactor.StopAndWait();
+
+            await NotifyFinish(ctx);
+        }
+
         [Command("build"), RequireOwner]
         [Description("build {Name} [{Script}]\nBuild {Name} with script file at {Script}.")]
         public async Task Build(CommandContext ctx, string name, string scriptPath = "")
