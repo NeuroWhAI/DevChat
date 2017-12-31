@@ -179,6 +179,7 @@ namespace DevChat
                 // Run script
                 if (string.IsNullOrWhiteSpace(proj.RunScript) == false)
                 {
+                    Shell.WorkingDirectory = GetProjectPath(name);
                     var process = Shell.Execute("cmd", "/C " + proj.RunScript,
                         output.PushMessage);
 
