@@ -65,7 +65,7 @@ namespace DevChat
             string configPath = GetConfigPath(name);
             string projPath = GetProjectPath(name);
 
-            using (var sw = new StreamWriter(configPath, FileMode.Write))
+            using (var sw = new StreamWriter(configPath))
             {
                 var proj = new Project()
                 {
