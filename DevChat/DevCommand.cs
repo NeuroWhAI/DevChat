@@ -15,7 +15,7 @@ namespace DevChat
 {
     public class DevCommand
     {
-        [Command("create"), RequireOwner]
+        [Command("create"), Aliases("new"), RequireOwner]
         [Description("create {Name}\nCreate a project.")]
         public async Task Create(CommandContext ctx, string name)
         {
@@ -24,7 +24,7 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
-        [Command("remove"), RequireOwner]
+        [Command("remove"), Aliases("del"), RequireOwner]
         [Description("remove {Name}\nRemove a project.")]
         public async Task Remove(CommandContext ctx, string name)
         {
@@ -47,6 +47,15 @@ namespace DevChat
         public async Task Run(CommandContext ctx, string name, string filePath = "")
         {
             await NotifyWorking(ctx, "Run " + name);
+
+            await NotifyFinish(ctx);
+        }
+
+        [Command("config"), Aliases("cfg"), RequireOwner]
+        [Description("config {Name} {Property} {Value}\nSet {Property} of {Name} to {Value}.")]
+        public async Task Run(CommandContext ctx, string name, string prop, string data)
+        {
+            await NotifyWorking(ctx, "Config " + name);
 
             await NotifyFinish(ctx);
         }
