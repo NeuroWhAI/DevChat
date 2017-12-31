@@ -85,6 +85,13 @@ namespace DevChat
         {
             await NotifyWorking(ctx, "Run " + name);
 
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.RunProject(name, interactor, interactor);
+
+            interactor.StopAndWait();
+
             await NotifyFinish(ctx);
         }
 

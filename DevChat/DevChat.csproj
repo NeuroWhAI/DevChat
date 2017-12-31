@@ -59,6 +59,7 @@
     <Compile Include="DiscordBot.cs" />
     <Compile Include="Interactor.cs" />
     <Compile Include="IPushMessage.cs" />
+    <Compile Include="IReceiveStreamWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectManager.cs" />

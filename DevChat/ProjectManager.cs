@@ -169,6 +169,34 @@ namespace DevChat
             }
         }
 
+        public void RunProject(string name, IPushMessage output, IReceiveStreamWriter input)
+        {
+            if (Exists(name))
+            {
+                var proj = LoadProject(name);
+
+
+                // Run script
+                if (string.IsNullOrWhiteSpace(proj.RunScript) == false)
+                {
+                    var process = Shell.Execute("cmd", "/C " + proj.RunScript,
+                        output.PushMessage);
+
+                    input.SetStreamWriter(process.StandardInput);
+
+                    process.WaitForExit();
+                    process.Close();
+                }
+
+
+                output.PushMessage("Complete!");
+            }
+            else
+            {
+                output.PushMessage($"Project {name} does not exists.");
+            }
+        }
+
         private void NoException(Action action, bool log = false)
         {
             try

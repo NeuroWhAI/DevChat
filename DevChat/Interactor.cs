@@ -14,7 +14,7 @@ using DSharpPlus.Entities;
 
 namespace DevChat
 {
-    public class Interactor : IPushMessage
+    public class Interactor : IPushMessage, IReceiveStreamWriter
     {
         public Interactor(CommandContext ctx)
         {
@@ -76,6 +76,11 @@ namespace DevChat
             {
                 m_sendBuffer.Enqueue(message);
             }
+        }
+
+        public void SetStreamWriter(StreamWriter sw)
+        {
+            this.InputStream = sw;
         }
 
         private string DequeueSendBuffer(int maxLength)
