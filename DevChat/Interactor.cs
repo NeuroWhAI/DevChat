@@ -30,10 +30,19 @@ namespace DevChat
             var interactivity = m_ctx.Client.GetInteractivityModule();
 
 
-            // TODO: Task 만들어서 Send하기
+            // Send task
+            var sendTask = new Task(() =>
+            {
+                while (interactivity != null)
+                {
+                    
+                }
+            });
+            sendTask.Start();
 
 
-            while (true)
+            // Receive task
+            while (interactivity != null)
             {
                 var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == m_ctx.User.Id,
                     this.TimeOut);
@@ -48,6 +57,12 @@ namespace DevChat
                     this.InputStream.WriteLine(msg.Message.Content);
                 }
             }
+
+
+            interactivity = null;
+
+
+            sendTask.Wait();
         }
 
         public async Task Finish()
