@@ -34,9 +34,10 @@ namespace DevChat
                     outputHandler(e.Data);
                 }
             });
+            
+            proc.Start();
 
             proc.BeginOutputReadLine();
-            proc.Start();
 
             return proc;
         }
