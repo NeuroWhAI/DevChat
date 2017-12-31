@@ -77,6 +77,7 @@ namespace DevChat
                 + proc.StandardError.ReadToEnd();
 
             proc.WaitForExit();
+            proc.Close();
 
             return output;
         }
