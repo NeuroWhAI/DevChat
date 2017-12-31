@@ -67,7 +67,7 @@ namespace DevChat
 
         [Command("config"), Aliases("cfg"), RequireOwner]
         [Description("config {Name} {Property} {Value}\nSet {Property} of {Name} to {Value}.")]
-        public async Task Run(CommandContext ctx, string name, string prop, string data)
+        public async Task Config(CommandContext ctx, string name, string prop, string data)
         {
             await NotifyWorking(ctx, "Config " + name);
 
