@@ -6,10 +6,10 @@ Develop remotely with Discord bot.
 ## Screenshots
 
 Register/Config a project.  
-![new](Images/new.png)
+![](Images/new.PNG)
 
 Run the project and Interact with standard streams.  
-![run](Images/run.png)
+![](Images/run.PNG)
 
 
 ## Why?
