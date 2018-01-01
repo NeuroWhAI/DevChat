@@ -79,9 +79,6 @@ namespace DevChat
             string cloneResult = Shell.Execute("git", $"clone \"{gitUrl}\" .");
 
             output.PushMessage(cloneResult);
-
-
-            output.PushMessage("Complete!");
         }
 
         public void DeleteProject(string name, IPushMessage output)
@@ -93,9 +90,6 @@ namespace DevChat
 
                 NoException(() => DeleteDirectory(projPath));
                 NoException(() => File.Delete(configPath));
-
-
-                output.PushMessage("Complete!");
             }
             else
             {
@@ -126,9 +120,6 @@ namespace DevChat
                 proj.SetProperty(prop, data);
 
                 SaveProject(name, proj);
-
-
-                output.PushMessage("Complete!");
             }
             else
             {
@@ -158,10 +149,6 @@ namespace DevChat
 
                     process.WaitForExit();
                     process.Close();
-                }
-
-
-                output.PushMessage("Complete!");
             }
             else
             {
@@ -188,9 +175,6 @@ namespace DevChat
                     process.WaitForExit();
                     process.Close();
                 }
-
-
-                output.PushMessage("Complete!");
             }
             else
             {
