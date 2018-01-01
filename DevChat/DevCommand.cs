@@ -119,7 +119,6 @@ namespace DevChat
 
         private async Task NotifyFinish(CommandContext ctx)
         {
-            await ctx.RespondAsync();
             await ctx.Client.UpdateStatusAsync();
         }
 
