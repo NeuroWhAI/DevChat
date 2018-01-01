@@ -124,6 +124,9 @@ namespace DevChat
                         m_ctx.RespondAsync($"```\n{output}\n```")
                             .ConfigureAwait(false).GetAwaiter().GetResult();
 
+                        m_ctx.TriggerTypingAsync()
+                            .ConfigureAwait(false).GetAwaiter().GetResult();
+
                         break;
                     }
                     catch (Exception e)
