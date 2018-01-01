@@ -149,6 +149,7 @@ namespace DevChat
 
                     process.WaitForExit();
                     process.Close();
+                }
             }
             else
             {
