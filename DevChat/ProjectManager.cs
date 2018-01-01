@@ -52,7 +52,8 @@ namespace DevChat
             return File.Exists(GetConfigPath(name));
         }
 
-        public void CreateProject(string name, string gitUrl, IPushMessage output)
+        public void CreateProject(string name, string gitUrl, IPushMessage output,
+            IReceiveStreamWriter input)
         {
             if (Exists(name))
             {
@@ -76,9 +77,13 @@ namespace DevChat
 
             // Clone git repo
             Shell.WorkingDirectory = projPath;
-            string cloneResult = Shell.Execute("git", $"clone \"{gitUrl}\" .");
+            var process = Shell.Execute("git", $"clone \"{gitUrl}\" .",
+                output.PushMessage);
 
-            output.PushMessage(cloneResult);
+            input.SetStreamWriter(process.StandardInput);
+
+            process.WaitForExit();
+            process.Close();
         }
 
         public void DeleteProject(string name, IPushMessage output)
