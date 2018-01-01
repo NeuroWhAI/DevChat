@@ -55,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicCommand.cs" />
+    <Compile Include="FixedProcess.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DevCommand.cs" />
     <Compile Include="DiscordBot.cs" />
     <Compile Include="Interactor.cs" />

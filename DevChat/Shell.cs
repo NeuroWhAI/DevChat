@@ -26,14 +26,15 @@ namespace DevChat
                 CreateNoWindow = true,
             };
 
-            var proc = new Process();
+            var proc = new FixedProcess();
             proc.StartInfo = info;
+            proc.EnableRaisingEvents = true;
 
             proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
                 if (e.Data != null)
                 {
-                    Console.WriteLine(e.Data);
+                    Console.Write(e.Data);
 
                     outputHandler(e.Data);
                 }
@@ -42,7 +43,7 @@ namespace DevChat
             {
                 if (e.Data != null)
                 {
-                    Console.WriteLine(e.Data);
+                    Console.Write(e.Data);
 
                     outputHandler(e.Data);
                 }
@@ -62,7 +63,7 @@ namespace DevChat
 
             var proc = Execute(file, argument, data =>
             {
-                output.AppendLine(data);
+                output.Append(data);
             });
 
             proc.WaitForExit();

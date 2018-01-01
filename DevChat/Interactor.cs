@@ -105,7 +105,7 @@ namespace DevChat
                     Task.Delay(10).Wait();
                 }
 
-                buffer.AppendLine(msg);
+                buffer.Append(msg);
             }
 
             return buffer.ToString();
@@ -166,7 +166,7 @@ namespace DevChat
 
                         try
                         {
-                            PushMessage(content);
+                            PushMessage("> Input: " + content + "\n");
 
                             this.InputStream.WriteLine(content);
                         }
