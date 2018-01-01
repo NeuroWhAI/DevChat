@@ -1,5 +1,5 @@
 # Dev Chat
-
+[![Build status](https://ci.appveyor.com/api/projects/status/nv5xf0wjni52pc0h?svg=true)](https://ci.appveyor.com/project/NeuroWhAI/devchat)  
 Develop remotely with Discord bot.
 
 
