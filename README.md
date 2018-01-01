@@ -5,11 +5,11 @@ Develop remotely with Discord bot.
 
 ## Screenshots
 
-Register/Config a project.
-![](./Images/new.png)
+Register/Config a project.  
+![](Images/new.png)
 
-Run the project and Interact with standard streams.
-![](./Images/run.png)
+Run the project and Interact with standard streams.  
+![](Images/run.png)
 
 
 ## Why?
