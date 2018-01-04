@@ -14,7 +14,7 @@ Run the project and Interact with standard streams.
 
 ## How it works?
 
-![](Images/logic.PNG)
+![](Images/logic.png)
 
 
 ## Why?
