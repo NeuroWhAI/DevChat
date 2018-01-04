@@ -12,6 +12,11 @@ Run the project and Interact with standard streams.
 ![](Images/run.PNG)
 
 
+## How it works?
+
+![](Images/logic.PNG)
+
+
 ## Why?
 
 왜냐하면 나는 군 복무 중이고 [사지방](https://namu.wiki/w/사이버%20지식%20정보방)에서 개발하는 것은 :shit: 같은 일이기 때문이다.  
