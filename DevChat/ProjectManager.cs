@@ -132,7 +132,7 @@ namespace DevChat
             }
         }
 
-        public void BuildProject(string name, IPushMessage output)
+        public void BuildProject(string name, string args, IPushMessage output)
         {
             if (Exists(name))
             {
@@ -149,7 +149,7 @@ namespace DevChat
                 // Run build script
                 if (string.IsNullOrWhiteSpace(proj.BuildScript) == false)
                 {
-                    var process = Shell.Execute("cmd", "/C " + proj.BuildScript,
+                    var process = Shell.Execute("cmd", "/C " + proj.BuildScript + " " + args,
                         output.PushMessage);
 
                     process.WaitForExit();
@@ -162,7 +162,8 @@ namespace DevChat
             }
         }
 
-        public void RunProject(string name, IPushMessage output, IReceiveStreamWriter input)
+        public void RunProject(string name, string args, IPushMessage output,
+            IReceiveStreamWriter input)
         {
             if (Exists(name))
             {
@@ -173,7 +174,7 @@ namespace DevChat
                 if (string.IsNullOrWhiteSpace(proj.RunScript) == false)
                 {
                     Shell.WorkingDirectory = GetProjectPath(name);
-                    var process = Shell.Execute("cmd", "/C " + proj.RunScript,
+                    var process = Shell.Execute("cmd", "/C " + proj.RunScript + " " + args,
                         output.PushMessage);
 
                     input.SetStreamWriter(process.StandardInput);

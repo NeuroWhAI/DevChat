@@ -64,15 +64,15 @@ namespace DevChat
         }
 
         [Command("build"), RequireOwner]
-        [Description("build {Name}\nBuild {Name}.")]
-        public async Task Build(CommandContext ctx, string name)
+        [Description("build {Name} [{Args}]\nBuild {Name}.")]
+        public async Task Build(CommandContext ctx, string name, string args = "")
         {
             await NotifyWorking(ctx, "Build " + name);
 
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            ProjectMgr.BuildProject(name, interactor);
+            ProjectMgr.BuildProject(name, args, interactor);
 
             interactor.StopAndWait();
 
@@ -80,15 +80,15 @@ namespace DevChat
         }
 
         [Command("run"), RequireOwner]
-        [Description("run {Name}\nExecute {Name}.")]
-        public async Task Run(CommandContext ctx, string name)
+        [Description("run {Name} [{Args}]\nExecute {Name}.")]
+        public async Task Run(CommandContext ctx, string name, string args = "")
         {
             await NotifyWorking(ctx, "Run " + name);
 
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            ProjectMgr.RunProject(name, interactor, interactor);
+            ProjectMgr.RunProject(name, args, interactor, interactor);
 
             interactor.StopAndWait();
 
