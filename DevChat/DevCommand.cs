@@ -120,7 +120,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            ProjectMgr.SyncProject(name);
+            ProjectMgr.SyncProject(name, interactor);
 
             interactor.StopAndWait();
 
