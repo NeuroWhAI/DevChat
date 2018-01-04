@@ -111,6 +111,22 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
+        [Command("sync"), RequireOwner]
+        [Description("sync {Name}\nSync project {Name}.")]
+        public async Task Sync(CommandContext ctx, string name)
+        {
+            await NotifyWorking(ctx, "Sync " + name);
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.SyncProject(name);
+
+            interactor.StopAndWait();
+
+            await NotifyFinish(ctx);
+        }
+
         private async Task NotifyWorking(CommandContext ctx, string job)
         {
             await ctx.TriggerTypingAsync();

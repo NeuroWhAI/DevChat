@@ -139,11 +139,7 @@ namespace DevChat
                 var proj = LoadProject(name);
 
 
-                // Sync repo
-                Shell.WorkingDirectory = GetProjectPath(name);
-                string pullResult = Shell.Execute("git", "pull");
-
-                output.PushMessage(pullResult);
+                SyncProject(name, output);
 
 
                 // Run build script
@@ -170,6 +166,9 @@ namespace DevChat
                 var proj = LoadProject(name);
 
 
+                SyncProject(name, output);
+
+
                 // Run script
                 if (string.IsNullOrWhiteSpace(proj.RunScript) == false)
                 {
@@ -187,6 +186,15 @@ namespace DevChat
             {
                 output.PushMessage($"Project {name} does not exists.");
             }
+        }
+
+        public void SyncProject(string name, IPushMessage output)
+        {
+            // Sync repo
+            Shell.WorkingDirectory = GetProjectPath(name);
+            string pullResult = Shell.Execute("git", "pull");
+
+            output.PushMessage(pullResult);
         }
 
         private void NoException(Action action, bool log = false)
