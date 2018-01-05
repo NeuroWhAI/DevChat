@@ -205,6 +205,26 @@ namespace DevChat
             output.PushMessage(result);
         }
 
+        public object GetLocker(string name)
+        {
+            object locker = null;
+
+            lock (m_lockerLocker)
+            {
+                if (m_projectLocker.ContainsKey(name))
+                {
+                    locker = m_projectLocker[name];
+                }
+                else
+                {
+                    locker = new object();
+                    m_projectLocker.Add(name, locker);
+                }
+            }
+
+            return locker;
+        }
+
         private void NoException(Action action, bool log = false)
         {
             try
@@ -260,5 +280,8 @@ namespace DevChat
                 sw.WriteLine(proj.ToJson());
             }
         }
+
+        private readonly object m_lockerLocker = new object();
+        private Dictionary<string, object> m_projectLocker = new Dictionary<string, object>();
     }
 }
