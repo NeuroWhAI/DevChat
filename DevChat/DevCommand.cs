@@ -136,7 +136,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            ProjectMgr.SyncProject(name, command, interactor);
+            ProjectMgr.GitProject(name, command, interactor);
 
             interactor.StopAndWait();
 
