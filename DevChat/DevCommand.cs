@@ -24,7 +24,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.CreateProject(name, gitUrl, interactor, interactor);
             }
@@ -43,7 +43,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.DeleteProject(name, interactor);
             }
@@ -62,7 +62,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.InfoProject(name, interactor);
             }
@@ -81,7 +81,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.BuildProject(name, args, interactor);
             }
@@ -100,7 +100,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.RunProject(name, args, interactor, interactor);
             }
@@ -119,7 +119,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.ConfigProject(name, prop, data, interactor);
             }
@@ -138,7 +138,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.SyncProject(name, interactor);
             }
@@ -157,7 +157,7 @@ namespace DevChat
             var interactor = new Interactor(ctx);
             interactor.Start();
 
-            lock (projectMgr.GetLocker(name))
+            lock (ProjectMgr.GetLocker(name))
             {
                 ProjectMgr.GitProject(name, command, interactor);
             }
