@@ -197,6 +197,22 @@ namespace DevChat
             output.PushMessage(pullResult);
         }
 
+        public void WriteProject(string name, string path, string fileUrl, IPushMessage output)
+        {
+            // Download a file from fileUrl and Overwrite a file in path.
+            // TODO: 
+        }
+
+        public void DiscardProject(string name, IPushMessage output)
+        {
+            // Discard index changes in server.
+            Shell.WorkingDirectory = GetProjectPath(name);
+            string result = Shell.Execute("git", "reset --hard");
+            result += "\n" + Shell.Execute("git", "clean -f -d");
+
+            output.PushMessage(result);
+        }
+
         private void NoException(Action action, bool log = false)
         {
             try
