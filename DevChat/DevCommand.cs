@@ -127,22 +127,6 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
-        [Command("discard"), Aliases("reset"), RequireOwner]
-        [Description("discard {Name}\nDiscard index changes in {Name}.")]
-        public async Task Discard(CommandContext ctx, string name)
-        {
-            await NotifyWorking(ctx, "Discard " + name);
-
-            var interactor = new Interactor(ctx);
-            interactor.Start();
-
-            ProjectMgr.DiscardProject(name, interactor);
-
-            interactor.StopAndWait();
-
-            await NotifyFinish(ctx);
-        }
-
         private async Task NotifyWorking(CommandContext ctx, string job)
         {
             await ctx.TriggerTypingAsync();
