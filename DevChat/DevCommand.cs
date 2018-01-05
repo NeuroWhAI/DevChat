@@ -127,6 +127,22 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
+        [Command("git"), RequireOwner]
+        [Description("git {Name} {Command}\nExecute git {Command} at {Name}.")]
+        public async Task Git(CommandContext ctx, string name, string command)
+        {
+            await NotifyWorking(ctx, "Git " + name);
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.SyncProject(name, command, interactor);
+
+            interactor.StopAndWait();
+
+            await NotifyFinish(ctx);
+        }
+
         private async Task NotifyWorking(CommandContext ctx, string job)
         {
             await ctx.TriggerTypingAsync();

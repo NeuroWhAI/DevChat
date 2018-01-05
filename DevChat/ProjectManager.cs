@@ -197,6 +197,14 @@ namespace DevChat
             output.PushMessage(pullResult);
         }
 
+        public void GitProject(string name, string gitCommand, IPushMessage output)
+        {
+            Shell.WorkingDirectory = GetProjectPath(name);
+            string result = Shell.Execute("git", gitCommand);
+
+            output.PushMessage(result);
+        }
+
         private void NoException(Action action, bool log = false)
         {
             try
