@@ -60,10 +60,14 @@ namespace DevChat
         public static string Execute(string file, string argument)
         {
             var output = new StringBuilder();
+            object locker = new object();
 
             var proc = Execute(file, argument, data =>
             {
-                output.Append(data);
+                lock (locker)
+                {
+                    output.Append(data);
+                }
             });
 
             proc.WaitForExit();
