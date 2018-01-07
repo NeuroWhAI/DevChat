@@ -52,12 +52,21 @@ namespace DevChat
             m_recvTask = null;
 
 
-            var output = DequeueSendBuffer(2048);
-
-            if (output.Length > 0)
+            while (true)
             {
-                m_ctx.RespondAsync($"```\n{output}\n```")
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                var output = DequeueSendBuffer(1998);
+
+                if (output.Length > 0)
+                {
+                    Task.Delay(this.SendPeriod).Wait();
+
+                    m_ctx.RespondAsync($"```\n{output}\n```")
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+                else
+                {
+                    break;
+                }
             }
 
 
