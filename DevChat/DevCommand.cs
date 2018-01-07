@@ -148,18 +148,18 @@ namespace DevChat
             await NotifyFinish(ctx);
         }
 
-        [Command("git"), RequireOwner]
-        [Description("git {Name} {Command}\nExecute git {Command} at {Name}.")]
-        public async Task Git(CommandContext ctx, string name, string command)
+        [Command("cmd"), RequireOwner]
+        [Description("cmd {Name} {Command}\nExecute {Command} at {Name}.")]
+        public async Task Cmd(CommandContext ctx, string name, string command)
         {
-            await NotifyWorking(ctx, "Git " + name);
+            await NotifyWorking(ctx, "Cmd " + name);
 
             var interactor = new Interactor(ctx);
             interactor.Start();
 
             lock (ProjectMgr.GetLocker(name))
             {
-                ProjectMgr.GitProject(name, command, interactor);
+                ProjectMgr.CmdProject(name, command, interactor, interactor);
             }
 
             interactor.StopAndWait();

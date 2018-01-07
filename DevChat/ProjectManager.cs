@@ -190,19 +190,34 @@ namespace DevChat
 
         public void SyncProject(string name, IPushMessage output)
         {
-            // Sync repo
-            Shell.WorkingDirectory = GetProjectPath(name);
-            string pullResult = Shell.Execute("git", "pull");
+            if (Exists(name)) {
+                // Sync repo
+                Shell.WorkingDirectory = GetProjectPath(name);
+                string pullResult = Shell.Execute("git", "pull");
 
-            output.PushMessage(pullResult);
+                output.PushMessage(pullResult);
+            }
+            else {
+                output.PushMessage($"Project {name} does not exists.");
+            }
         }
 
-        public void GitProject(string name, string gitCommand, IPushMessage output)
+        public void CmdProject(string name, string command, IPushMessage output,
+            IReceiveStreamWriter input)
         {
-            Shell.WorkingDirectory = GetProjectPath(name);
-            string result = Shell.Execute("git", gitCommand);
+            if (Exists(name)) {
+                Shell.WorkingDirectory = GetProjectPath(name);
+                var process = Shell.Execute("cmd", "/C " + command,
+                    output.PushMessage);
 
-            output.PushMessage(result);
+                input.SetStreamWriter(process.StandardInput);
+
+                process.WaitForExit();
+                process.Close();
+            }
+            else {
+                output.PushMessage($"Project {name} does not exists.");
+            }
         }
 
         public object GetLocker(string name)
