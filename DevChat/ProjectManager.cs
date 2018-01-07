@@ -52,6 +52,18 @@ namespace DevChat
             return File.Exists(GetConfigPath(name));
         }
 
+        public void ListAllProject(IPushMessage output)
+        {
+            var buffer = new StringBuilder();
+
+            foreach (string file in Directory.GetFiles(ConfigDir, "*.json"))
+            {
+                buffer.AppendLine(Path.GetFileNameWithoutExtension(file));
+            }
+
+            output.PushMessage(buffer.ToString());
+        }
+
         public void CreateProject(string name, string gitUrl, IPushMessage output,
             IReceiveStreamWriter input)
         {

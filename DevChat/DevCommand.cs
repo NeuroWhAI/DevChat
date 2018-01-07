@@ -15,6 +15,22 @@ namespace DevChat
 {
     public class DevCommand
     {
+        [Command("list"), RequireOwner]
+        [Description("list\nList all project names.")]
+        public async Task ListAll(CommandContext ctx)
+        {
+            await NotifyWorking(ctx, "List");
+
+            var interactor = new Interactor(ctx);
+            interactor.Start();
+
+            ProjectMgr.ListAllProject(interactor);
+
+            interactor.StopAndWait();
+
+            await NotifyFinish(ctx);
+        }
+
         [Command("create"), Aliases("new"), RequireOwner]
         [Description("create {Name} {Git URL}\nCreate a project.")]
         public async Task Create(CommandContext ctx, string name, string gitUrl)
