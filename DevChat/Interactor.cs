@@ -54,7 +54,7 @@ namespace DevChat
 
             while (true)
             {
-                var output = DequeueSendBuffer(1998);
+                var output = DequeueSendBuffer(1842);
 
                 if (output.Length > 0)
                 {
@@ -124,7 +124,7 @@ namespace DevChat
         {
             while (this.Online)
             {
-                var output = DequeueSendBuffer(1998);
+                var output = DequeueSendBuffer(1842);
 
                 while (this.Online && output.Length > 0)
                 {
