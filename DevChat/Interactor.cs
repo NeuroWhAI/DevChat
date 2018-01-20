@@ -36,6 +36,8 @@ namespace DevChat
 
             m_recvTask = new Task(this.ReceiveJob);
             m_recvTask.Start();
+
+            m_startTime = DateTime.Now;
         }
 
         public void Stop()
@@ -77,6 +79,10 @@ namespace DevChat
         {
             Stop();
             Wait();
+
+            var elapsedTime = DateTime.Now - m_startTime;
+            m_ctx.RespondAsync(elapsedTime.ToString("g"))
+                .ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public void PushMessage(string message)
@@ -204,5 +210,6 @@ namespace DevChat
         private ConcurrentQueue<string> m_sendBuffer = new ConcurrentQueue<string>();
         private Task m_sendTask = null;
         private Task m_recvTask = null;
+        private DateTime m_startTime = DateTime.Now;
     }
 }
