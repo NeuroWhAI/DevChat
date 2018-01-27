@@ -177,13 +177,13 @@ namespace DevChat
                     {
                         string content = msg.Message.Content;
 
-                        if (content.StartsWith(">"))
-                        {
-                            continue;
-                        }
-                        else if (content == this.ExitKeyword)
+                        if (content == this.ExitKeyword)
                         {
                             break;
+                        }
+                        else if (content.StartsWith(">"))
+                        {
+                            continue;
                         }
 
                         try
