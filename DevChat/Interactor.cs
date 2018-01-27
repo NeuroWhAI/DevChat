@@ -177,7 +177,11 @@ namespace DevChat
                     {
                         string content = msg.Message.Content;
 
-                        if (content == this.ExitKeyword)
+                        if (content.StartsWith(">"))
+                        {
+                            continue;
+                        }
+                        else if (content == this.ExitKeyword)
                         {
                             break;
                         }
